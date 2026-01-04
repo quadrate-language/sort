@@ -78,3 +78,42 @@ test "sort::search" {
 
 	arr mem::free
 }
+
+test "sort::is_sorted" {
+	// Sorted array
+	3 8 * mem::alloc! -> sorted
+	1 sorted 0 mem::set_i64
+	2 sorted 8 mem::set_i64
+	3 sorted 16 mem::set_i64
+	sorted 3 sort::is_sorted testing::assert_true
+	sorted mem::free
+
+	// Unsorted array
+	3 8 * mem::alloc! -> unsorted
+	3 unsorted 0 mem::set_i64
+	1 unsorted 8 mem::set_i64
+	2 unsorted 16 mem::set_i64
+	unsorted 3 sort::is_sorted testing::assert_false
+	unsorted mem::free
+}
+
+test "sort::reverse" {
+	4 8 * mem::alloc! -> arr
+	1 arr 0 mem::set_i64
+	2 arr 8 mem::set_i64
+	3 arr 16 mem::set_i64
+	4 arr 24 mem::set_i64
+
+	arr 4 sort::reverse
+
+	arr 0 mem::get_i64 4 testing::assert_eq
+	arr 8 mem::get_i64 3 testing::assert_eq
+	arr 16 mem::get_i64 2 testing::assert_eq
+	arr 24 mem::get_i64 1 testing::assert_eq
+
+	arr mem::free
+}
+
+// Note: sort::strings and sort::strings_desc require raw memory arrays
+// which are complex to set up in unit tests. Those functions are tested
+// via integration tests that use os::glob to get string arrays.
