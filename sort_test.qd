@@ -1,0 +1,80 @@
+// Unit tests for the sort module
+use sort
+use mem
+use testing
+
+test "sort::ints ascending" {
+	5 8 * mem::alloc! -> arr
+	5 arr 0 mem::set_i64
+	2 arr 8 mem::set_i64
+	8 arr 16 mem::set_i64
+	1 arr 24 mem::set_i64
+	9 arr 32 mem::set_i64
+
+	arr 5 sort::ints
+
+	arr 0 mem::get_i64 1 testing::assert_eq
+	arr 8 mem::get_i64 2 testing::assert_eq
+	arr 16 mem::get_i64 5 testing::assert_eq
+	arr 24 mem::get_i64 8 testing::assert_eq
+	arr 32 mem::get_i64 9 testing::assert_eq
+
+	arr mem::free
+}
+
+test "sort::ints_desc descending" {
+	5 8 * mem::alloc! -> arr
+	5 arr 0 mem::set_i64
+	2 arr 8 mem::set_i64
+	8 arr 16 mem::set_i64
+	1 arr 24 mem::set_i64
+	9 arr 32 mem::set_i64
+
+	arr 5 sort::ints_desc
+
+	arr 0 mem::get_i64 9 testing::assert_eq
+	arr 8 mem::get_i64 8 testing::assert_eq
+	arr 16 mem::get_i64 5 testing::assert_eq
+	arr 24 mem::get_i64 2 testing::assert_eq
+	arr 32 mem::get_i64 1 testing::assert_eq
+
+	arr mem::free
+}
+
+test "sort::min" {
+	3 8 * mem::alloc! -> arr
+	5 arr 0 mem::set_i64
+	2 arr 8 mem::set_i64
+	8 arr 16 mem::set_i64
+
+	arr 3 sort::min 2 testing::assert_eq
+
+	arr mem::free
+}
+
+test "sort::max" {
+	3 8 * mem::alloc! -> arr
+	5 arr 0 mem::set_i64
+	2 arr 8 mem::set_i64
+	8 arr 16 mem::set_i64
+
+	arr 3 sort::max 8 testing::assert_eq
+
+	arr mem::free
+}
+
+test "sort::search" {
+	5 8 * mem::alloc! -> arr
+	1 arr 0 mem::set_i64
+	2 arr 8 mem::set_i64
+	5 arr 16 mem::set_i64
+	8 arr 24 mem::set_i64
+	9 arr 32 mem::set_i64
+
+	arr 5 5 sort::search 2 testing::assert_eq
+	arr 5 1 sort::search 0 testing::assert_eq
+	arr 5 9 sort::search 4 testing::assert_eq
+	arr 5 3 sort::search -1 testing::assert_eq
+
+	arr mem::free
+}
